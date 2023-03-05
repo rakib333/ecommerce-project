@@ -21,19 +21,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(express.static(path.join(__dirname , './client/build')))
 //routes
 app.use('/api/v1/auth', router);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
 
-//rest api
-app.use("*", (req, res) => {
-  res.sendFile(path.join(__dirname, './client/build/index.html'))
-})
 
 //PORT
 const PORT = process.env.PORT || 5000;
+
+// Front end tagging
+app.use(express.static('client/build'))
+app.get('*', (req, res) => {
+    req.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
+})
+
 
 //run listen
 app.listen(PORT, () => {
